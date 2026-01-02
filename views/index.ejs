@@ -1,0 +1,64 @@
+<ul>
+  <% books.forEach(book => { %>
+    <li class="book">
+
+      <!-- Book info -->
+      <h3><%= book.title %></h3>
+      <small>Read: <%= book.read_date %></small>
+
+      <p>Rating: <%= book.rating ?? "N/A" %></p>
+      <p><%= book.notes ?? "No notes" %></p>
+
+      <!-- Cover -->
+      <% if (book.isbn) { %>
+        <img 
+          src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg"
+          alt="Book cover"
+        >
+      <% } else { %>
+        <p>No cover available</p>
+      <% } %>
+
+      <!-- Edit -->
+      <form action="/edit" method="post">
+        <input type="hidden" name="bookId" value="<%= book.id %>">
+
+        <input type="text" name="title" value="<%= book.title %>" required>
+        <input type="date" name="read_date" value="<%= book.read_date %>" required>
+
+        <input type="number" name="rating" value="<%= book.rating %>">
+        <textarea name="notes"><%= book.notes %></textarea>
+
+        <input type="text" name="isbn" value="<%= book.isbn %>">
+
+        <button type="submit">Update</button>
+      </form>
+
+      <!-- Delete -->
+      <form action="/delete" method="post">
+        <input type="hidden" name="bookId" value="<%= book.id %>">
+        <button type="submit">Delete</button>
+      </form>
+
+    </li>
+  <% }) %>
+</ul>
+
+
+
+<form method="get" action="/">
+  <button type="submit" name="sort" value="date">Sort by Date</button>
+  <button type="submit" name="sort" value="rating">Sort by Rating</button>
+</form>
+
+<form action="/add" method="post">
+  <input type="text" name="title" placeholder="Book title" required>
+  <input type="date" name="read_date" required>
+
+  <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)">
+  <textarea name="notes" placeholder="Your notes"></textarea>
+
+  <input type="text" name="isbn" placeholder="ISBN (optional)">
+
+  <button type="submit">Add Book</button>
+</form>
